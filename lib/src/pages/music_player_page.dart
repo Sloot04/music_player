@@ -24,7 +24,6 @@ class MusicPlayerPage extends StatelessWidget {
 }
 
 class Background extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size.height;
@@ -32,16 +31,14 @@ class Background extends StatelessWidget {
       width: double.infinity,
       height: screenSize * 0.8,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(60)),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.center,
-          colors: [
-          Color(0xff33333E),
-           Color(0xff201E28),
-
-        ])
-      ),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(60)),
+          gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.center,
+              colors: [
+                Color(0xff33333E),
+                Color(0xff201E28),
+              ])),
     );
   }
 }
@@ -55,17 +52,41 @@ class Lyrics extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         itemExtent: 42.0,
         diameterRatio: 1.5,
-        children: lyrics.map((linea) => (Text(
-              linea,
-              style:
-                  TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.6)),
-            ))).toList(),
+        children: lyrics
+            .map((linea) => (Text(
+                  linea,
+                  style: TextStyle(
+                      fontSize: 20, color: Colors.white.withOpacity(0.6)),
+                )))
+            .toList(),
       ),
     );
   }
 }
 
-class TituloPlay extends StatelessWidget {
+class TituloPlay extends StatefulWidget {
+  @override
+  _TituloPlayState createState() => _TituloPlayState();
+}
+
+class _TituloPlayState extends State<TituloPlay>
+    with SingleTickerProviderStateMixin {
+  bool isPlaying = false;
+  late AnimationController playAnimation;
+
+  @override
+  void initState() {
+    playAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    this.playAnimation.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -95,9 +116,20 @@ class TituloPlay extends StatelessWidget {
           FloatingActionButton(
             elevation: 0.0,
             highlightElevation: 0.0,
-            onPressed: () {},
+            onPressed: () {
+              if (this.isPlaying) {
+                playAnimation.reverse();
+                this.isPlaying = false;
+              } else {
+                playAnimation.forward();
+                this.isPlaying = true;
+              }
+            },
             backgroundColor: Color(0xffF8CB51),
-            child: Icon(Icons.play_arrow),
+            child: AnimatedIcon(
+              icon: AnimatedIcons.play_pause,
+              progress: playAnimation,
+            ),
           )
         ],
       ),
