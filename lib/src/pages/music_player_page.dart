@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/src/widgets/custom_appbar.dart';
+import 'package:music_player/src/helpers/helpers.dart';
 
 class MusicPlayerPage extends StatelessWidget {
   @override
@@ -9,6 +10,67 @@ class MusicPlayerPage extends StatelessWidget {
         children: [
           CustomAppBarr(),
           ImagenDiscoDuracion(),
+          TituloPlay(),
+          Expanded(child: Lyrics()),
+        ],
+      ),
+    );
+  }
+}
+
+class Lyrics extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final lyrics = getLyrics();
+    return Container(
+      child: ListWheelScrollView(
+        physics: BouncingScrollPhysics(),
+        itemExtent: 42.0,
+        diameterRatio: 1.5,
+        children: lyrics.map((linea) => (Text(
+              linea,
+              style:
+                  TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.6)),
+            ))).toList(),
+      ),
+    );
+  }
+}
+
+class TituloPlay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      margin: EdgeInsets.only(top: 40),
+      child: Row(
+        children: [
+          Column(
+            children: [
+              Text(
+                'Far Away',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white.withOpacity(0.8),
+                ),
+              ),
+              Text(
+                '-Breaking Benjamin-',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          FloatingActionButton(
+            elevation: 0.0,
+            highlightElevation: 0.0,
+            onPressed: () {},
+            backgroundColor: Color(0xffF8CB51),
+            child: Icon(Icons.play_arrow),
+          )
         ],
       ),
     );
@@ -48,18 +110,18 @@ class BarraProgreso extends StatelessWidget {
                 width: 3.0,
                 height: 230.0,
                 color: Colors.white.withOpacity(0.1),
-              ), 
-                Positioned(
-                  bottom: 0.0,
-                  child: Container(
+              ),
+              Positioned(
+                bottom: 0.0,
+                child: Container(
                   width: 3.0,
                   height: 100.0,
                   color: Colors.white.withOpacity(0.8),
+                ),
               ),
-                ), 
             ],
           ),
-           SizedBox(height: 10.0),
+          SizedBox(height: 10.0),
           Text('00:00', style: estilo),
         ],
       ),
